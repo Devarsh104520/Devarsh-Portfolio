@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Devarsh Kunala — ML & Software Engineer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#11161D;
+    --ink-soft:#171D26;
+    --paper:#ECE7DC;
+    --signal:#5EE6C5;
+    --rust:#D97B4F;
+    --ash:#8A93A0;
+    --line:#2A323D;
+    --text:#E9ECEF;
+    --text-dim:#A9B1BC;
+    --radius:10px;
+    --display:'Space Grotesk', sans-serif;
+    --body:'Inter', sans-serif;
+    --mono:'IBM Plex Mono', monospace;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--ink);
+    color:var(--text);
+    font-family:var(--body);
+    line-height:1.55;
+    overflow-x:hidden;
+  }
+  a{color:inherit; text-decoration:none;}
+  ::selection{background:var(--signal); color:var(--ink);}
+  :focus-visible{outline:2px solid var(--signal); outline-offset:3px;}
+
+  .wrap{max-width:920px; margin:0 auto; padding:0 28px;}
+
+  /* ---------- Pipeline rail (signature element) ---------- */
+  .rail{
+    position:fixed;
+    left:50%;
+    top:0;
+    bottom:0;
+    width:2px;
+    transform:translateX(-449px);
+    background:var(--line);
+    z-index:1;
+    pointer-events:none;
+  }
+  .rail-fill{
+    position:absolute;
+    top:0; left:0; width:100%;
+    background:linear-gradient(to bottom, var(--signal), var(--rust));
+    height:0%;
+    transition:height .08s linear;
+  }
+  .rail-node{
+    position:absolute;
+    left:50%;
+    transform:translate(-50%,-50%);
+    width:11px; height:11px;
+    border-radius:50%;
+    background:var(--ink);
+    border:2px solid var(--ash);
+    z-index:2;
+  }
+  .rail-node.active{
+    border-color:var(--signal);
+    background:var(--signal);
+    box-shadow:0 0 0 4px rgba(94,230,197,0.15);
+  }
+  .rail-pulse{
+    position:absolute;
+    left:50%;
+    transform:translate(-50%,-50%);
+    width:6px; height:6px;
+    border-radius:50%;
+    background:var(--rust);
+    box-shadow:0 0 12px 2px var(--rust);
+  }
+  @media (max-width:760px){
+    .rail{display:none;}
+  }
+
+  /* ---------- Layout helpers ---------- */
+  section{
+    position:relative;
+    padding:90px 0;
+    z-index:3;
+  }
+  .eyebrow{
+    font-family:var(--mono);
+    font-size:12px;
+    letter-spacing:.12em;
+    text-transform:uppercase;
+    color:var(--signal);
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin-bottom:18px;
+  }
+  .eyebrow::before{
+    content:'';
+    width:18px; height:1px;
+    background:var(--signal);
+  }
+  h1,h2,h3{font-family:var(--display); font-weight:600; letter-spacing:-0.01em;}
+
+  /* ---------- Header / nav ---------- */
+  header{
+    position:fixed; top:0; left:0; right:0;
+    z-index:10;
+    background:rgba(17,22,29,0.85);
+    backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--line);
+  }
+  .nav{
+    max-width:920px; margin:0 auto; padding:16px 28px;
+    display:flex; justify-content:space-between; align-items:center;
+  }
+  .nav-id{font-family:var(--mono); font-size:13px; color:var(--text-dim);}
+  .nav-id b{color:var(--text); font-weight:500;}
+  .nav-links{display:flex; gap:26px; font-family:var(--mono); font-size:12.5px;}
+  .nav-links a{color:var(--text-dim); transition:color .15s;}
+  .nav-links a:hover{color:var(--signal);}
+  @media (max-width:600px){ .nav-links{gap:14px;} }
+
+  /* ---------- Hero ---------- */
+  .hero{padding-top:170px; padding-bottom:80px;}
+  .hero-tag{
+    font-family:var(--mono); font-size:13px; color:var(--rust);
+    margin-bottom:22px;
+  }
+  .hero h1{
+    font-size:clamp(38px,6vw,62px);
+    line-height:1.05;
+    color:var(--text);
+    max-width:720px;
+  }
+  .hero h1 .accent{color:var(--signal);}
+  .hero p.lede{
+    margin-top:24px;
+    font-size:18px;
+    color:var(--text-dim);
+    max-width:540px;
+  }
+  .hero-meta{
+    display:flex; gap:28px; flex-wrap:wrap;
+    margin-top:36px;
+    font-family:var(--mono); font-size:12.5px; color:var(--ash);
+  }
+  .hero-meta span b{color:var(--text-dim); font-weight:500;}
+  .flow-strip{
+    margin-top:46px;
+    display:flex; flex-wrap:wrap; gap:0;
+    font-family:var(--mono); font-size:12px;
+    color:var(--text-dim);
+  }
+  .flow-strip .stage{
+    border:1px solid var(--line);
+    padding:7px 14px;
+    background:var(--ink-soft);
+  }
+  .flow-strip .arrow{
+    padding:7px 8px; color:var(--ash);
+  }
+
+  /* ---------- Section header pattern ---------- */
+  .sec-head{margin-bottom:42px;}
+  .sec-head h2{font-size:30px; color:var(--text);}
+
+  /* ---------- Experience ---------- */
+  .job{
+    border-left:1px solid var(--line);
+    padding-left:24px;
+    margin-bottom:40px;
+    position:relative;
+  }
+  .job::before{
+    content:''; position:absolute; left:-5px; top:6px;
+    width:9px; height:9px; border-radius:50%;
+    background:var(--ink); border:2px solid var(--signal);
+  }
+  .job-top{display:flex; justify-content:space-between; flex-wrap:wrap; gap:6px; align-items:baseline;}
+  .job-role{font-family:var(--display); font-size:19px; color:var(--text); font-weight:600;}
+  .job-date{font-family:var(--mono); font-size:12px; color:var(--ash);}
+  .job-org{font-family:var(--mono); font-size:13px; color:var(--rust); margin-top:2px; margin-bottom:12px;}
+  .job ul{list-style:none; padding:0;}
+  .job li{
+    color:var(--text-dim); font-size:15px;
+    padding-left:18px; position:relative; margin-bottom:9px;
+  }
+  .job li::before{
+    content:'›'; position:absolute; left:0; color:var(--signal);
+  }
+
+  /* ---------- Education ---------- */
+  .edu-grid{display:grid; grid-template-columns:1fr 1fr; gap:20px;}
+  @media (max-width:680px){ .edu-grid{grid-template-columns:1fr;} }
+  .edu-card{
+    border:1px solid var(--line); border-radius:var(--radius);
+    padding:22px; background:var(--ink-soft);
+  }
+  .edu-card .school{font-family:var(--display); font-weight:600; font-size:16px; color:var(--text);}
+  .edu-card .date{font-family:var(--mono); font-size:12px; color:var(--ash); margin-top:4px;}
+  .edu-card .degree{margin-top:10px; font-size:14.5px; color:var(--text-dim);}
+  .edu-card .gpa{font-family:var(--mono); font-size:12px; color:var(--signal); margin-top:8px;}
+  .edu-card .coursework{font-size:13px; color:var(--ash); font-style:italic; margin-top:10px;}
+  .cert-row{
+    margin-top:18px; display:flex; align-items:center; gap:12px;
+    font-family:var(--mono); font-size:12.5px; color:var(--text-dim);
+  }
+  .cert-pill{
+    border:1px solid var(--signal); color:var(--signal);
+    padding:5px 12px; border-radius:20px; font-size:11.5px;
+  }
+
+  /* ---------- Projects ---------- */
+  .proj{
+    border:1px solid var(--line); border-radius:var(--radius);
+    padding:26px; margin-bottom:22px;
+    background:var(--ink-soft);
+    transition:border-color .2s;
+  }
+  .proj:hover{border-color:var(--signal);}
+  .proj-top{display:flex; justify-content:space-between; align-items:flex-start; gap:14px; flex-wrap:wrap;}
+  .proj-title{font-family:var(--display); font-size:19px; font-weight:600; color:var(--text);}
+  .proj-link{font-family:var(--mono); font-size:12px; color:var(--signal); white-space:nowrap;}
+  .proj-link:hover{text-decoration:underline;}
+  .proj-pipeline{
+    display:flex; flex-wrap:wrap; gap:0; margin:16px 0;
+    font-family:var(--mono); font-size:11px; color:var(--ash);
+  }
+  .proj-pipeline .stg{padding:5px 10px; border:1px solid var(--line); border-radius:4px;}
+  .proj-pipeline .ar{padding:5px 6px; color:var(--rust);}
+  .proj p.desc{color:var(--text-dim); font-size:14.5px; margin-top:6px;}
+  .proj-stack{
+    margin-top:16px; display:flex; gap:8px; flex-wrap:wrap;
+  }
+  .proj-stack span{
+    font-family:var(--mono); font-size:11px; color:var(--text-dim);
+    border:1px solid var(--line); padding:4px 10px; border-radius:20px;
+  }
+
+  /* ---------- Skills ---------- */
+  .skill-cols{display:grid; grid-template-columns:1fr 1fr; gap:30px;}
+  @media (max-width:680px){ .skill-cols{grid-template-columns:1fr;} }
+  .skill-group h3{font-size:14px; font-family:var(--mono); color:var(--rust); text-transform:uppercase; letter-spacing:.06em; margin-bottom:14px; font-weight:500;}
+  .skill-tags{display:flex; flex-wrap:wrap; gap:8px;}
+  .skill-tags span{
+    font-family:var(--mono); font-size:12px; color:var(--text-dim);
+    border:1px solid var(--line); padding:6px 12px; border-radius:20px;
+  }
+
+  /* ---------- Contact / footer ---------- */
+  .contact-box{
+    border:1px solid var(--line); border-radius:var(--radius);
+    padding:40px; text-align:center; background:var(--ink-soft);
+  }
+  .contact-box h2{font-size:26px; color:var(--text);}
+  .contact-box p{color:var(--text-dim); margin-top:10px; font-size:15px;}
+  .contact-links{
+    margin-top:26px; display:flex; justify-content:center; gap:16px; flex-wrap:wrap;
+  }
+  .contact-links a{
+    font-family:var(--mono); font-size:13px;
+    border:1px solid var(--signal); color:var(--signal);
+    padding:10px 18px; border-radius:6px;
+    transition:background .15s, color .15s;
+  }
+  .contact-links a:hover{background:var(--signal); color:var(--ink);}
+  footer{
+    text-align:center; padding:30px 0 60px;
+    font-family:var(--mono); font-size:11.5px; color:var(--ash);
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    html{scroll-behavior:auto;}
+    .rail-fill, .rail-pulse{transition:none;}
+  }
+</style>
+</head>
+<body>
+
+<div class="rail" id="rail">
+  <div class="rail-fill" id="railFill"></div>
+  <div class="rail-pulse" id="railPulse" style="top:0;"></div>
+</div>
+
+<header>
+  <div class="nav">
+    <div class="nav-id"><b>devarsh kunala</b> — engineer.exe</div>
+    <nav class="nav-links">
+      <a href="#experience">experience</a>
+      <a href="#projects">projects</a>
+      <a href="#skills">skills</a>
+      <a href="#contact">contact</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <section class="hero" id="top">
+    <div class="hero-tag">// status: open to ml & software engineering roles</div>
+    <h1>I turn raw data<br>into systems that <span class="accent">run themselves.</span></h1>
+    <p class="lede">Devarsh Kunala — ML &amp; Software Engineer building data pipelines, RAG systems, and forecasting models for supply chain and operations.</p>
+    <div class="hero-meta">
+      <span><b>Based in</b> Edison, NJ</span>
+      <span><b>Currently</b> CES Limited (remote)</span>
+      <span><b>Focus</b> ETL · RAG · Forecasting</span>
+    </div>
+    <div class="flow-strip">
+      <div class="stage">EXTRACT</div><div class="arrow">→</div>
+      <div class="stage">TRANSFORM</div><div class="arrow">→</div>
+      <div class="stage">MODEL</div><div class="arrow">→</div>
+      <div class="stage">SERVE</div><div class="arrow">→</div>
+      <div class="stage">DASHBOARD</div>
+    </div>
+  </section>
+
+  <section id="experience">
+    <div class="sec-head">
+      <div class="eyebrow">node_01 / experience</div>
+      <h2>Where the pipeline's been running</h2>
+    </div>
+
+    <div class="job">
+      <div class="job-top">
+        <div class="job-role">Software / ML Engineer</div>
+        <div class="job-date">Jan 2025 — Present</div>
+      </div>
+      <div class="job-org">CES Limited · Detroit, MI (Remote)</div>
+      <ul>
+        <li>Built ETL flows pulling from Oracle Fusion via SQL extraction into Python transformation jobs, feeding RAG data sources for downstream retrieval.</li>
+        <li>Exposed processed data through REST APIs and configured KPI dashboards for supply chain monitoring.</li>
+        <li>Configured and integrated existing ML models into production workflows and contributed to a team RAG pipeline and CI/CD process for an agentic AI system supporting supply chain optimization.</li>
+      </ul>
+    </div>
+
+    <div class="job">
+      <div class="job-top">
+        <div class="job-role">Software Engineer</div>
+        <div class="job-date">Jun 2022 — Jul 2023</div>
+      </div>
+      <div class="job-org">Abbeysoft Technologies · Bangalore, India (Remote)</div>
+      <ul>
+        <li>Processed and resampled time-series data with Python and SQL, building rolling metrics and analytics-ready datasets that supported trend analysis and decision-making.</li>
+        <li>Developed Python analytics services for Blue Water Bridge operations, with data cleansing, REST APIs, time-series forecasting, and SQL-backed dashboards for real-time monitoring.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section id="education">
+    <div class="sec-head">
+      <div class="eyebrow">node_02 / education</div>
+      <h2>Training data</h2>
+    </div>
+    <div class="edu-grid">
+      <div class="edu-card">
+        <div class="school">New Jersey Institute of Technology</div>
+        <div class="date">Aug 2023 — May 2025</div>
+        <div class="degree">M.S. in Data Science</div>
+        <div class="gpa">GPA 3.89 / 4.0</div>
+        <div class="coursework">Relevant coursework: Machine Learning, Statistical Methods, Big Data, Applied AI</div>
+      </div>
+      <div class="edu-card">
+        <div class="school">JNTU Hyderabad</div>
+        <div class="date">Aug 2019 — May 2023</div>
+        <div class="degree">B.E. in Electronics &amp; Communication Engineering</div>
+        <div class="gpa">GPA 3.0 / 4.0</div>
+      </div>
+    </div>
+    <div class="cert-row">
+      <span class="cert-pill">AWS Certified Cloud Practitioner</span>
+      <span>verified credential</span>
+    </div>
+  </section>
+
+  <section id="projects">
+    <div class="sec-head">
+      <div class="eyebrow">node_03 / projects</div>
+      <h2>Things I've shipped on my own</h2>
+    </div>
+
+    <div class="proj">
+      <div class="proj-top">
+        <div class="proj-title">Border-Crossing Digital Twin</div>
+      </div>
+      <div class="proj-pipeline">
+        <span class="stg">SUMO/TraCI SIM</span><span class="ar">→</span>
+        <span class="stg">XGBoost CLASSIFIER</span><span class="ar">→</span>
+        <span class="stg">YOLOv8 DETECTION</span>
+      </div>
+      <p class="desc">A simulation-based digital twin of the Blue Water Bridge and Peace Bridge border crossings. Built SUMO/TraCI traffic simulations paired with XGBoost classifiers (95–99%+ accuracy) for hourly car/truck volume prediction, plus a YOLOv8 vehicle detection app for wait-time analysis.</p>
+      <div class="proj-stack">
+        <span>Python</span><span>SUMO</span><span>TraCI</span><span>XGBoost</span><span>YOLOv8</span><span>Flask</span>
+      </div>
+    </div>
+
+    <div class="proj">
+      <div class="proj-top">
+        <div class="proj-title">City Library Management System</div>
+        <a class="proj-link" href="https://github.com/Devarsh104520/citylibrary" target="_blank" rel="noopener">github →</a>
+      </div>
+      <div class="proj-pipeline">
+        <span class="stg">FASTAPI</span><span class="ar">→</span>
+        <span class="stg">POSTGRESQL</span><span class="ar">→</span>
+        <span class="stg">REACT UI</span>
+      </div>
+      <p class="desc">A full-stack library management platform with a FastAPI backend, PostgreSQL persistence layer, and a React front end for catalog browsing, checkouts, and member management.</p>
+      <div class="proj-stack">
+        <span>Python</span><span>FastAPI</span><span>SQL</span><span>PostgreSQL</span><span>React</span>
+      </div>
+    </div>
+
+    <div class="proj">
+      <div class="proj-top">
+        <div class="proj-title">FedEx Delivery Receipt Workflow</div>
+      </div>
+      <div class="proj-pipeline">
+        <span class="stg">PDF EXTRACT</span><span class="ar">→</span>
+        <span class="stg">FLASK API</span><span class="ar">→</span>
+        <span class="stg">REACT DASHBOARD</span>
+      </div>
+      <p class="desc">An automated workflow tool that extracts delivery receipt data from PDFs using pdfplumber, processes it through a Flask backend, exports to Excel via ExcelJS, and surfaces it in a React/Vite dashboard.</p>
+      <div class="proj-stack">
+        <span>Flask</span><span>React</span><span>Vite</span><span>ExcelJS</span><span>pdfplumber</span>
+      </div>
+    </div>
+
+    <div class="proj">
+      <div class="proj-top">
+        <div class="proj-title">Treasury Gateway</div>
+      </div>
+      <div class="proj-pipeline">
+        <span class="stg">GMAIL API</span><span class="ar">→</span>
+        <span class="stg">PDF PARSE</span><span class="ar">→</span>
+        <span class="stg">AUTOMATED ROUTING</span>
+      </div>
+      <p class="desc">A Python/Flask tool that monitors incoming treasury documents through the Gmail API, parses statement PDFs with pdfplumber, and automates downstream processing.</p>
+      <div class="proj-stack">
+        <span>Python</span><span>Flask</span><span>Gmail API</span><span>pdfplumber</span>
+      </div>
+    </div>
+  </section>
+
+  <section id="skills">
+    <div class="sec-head">
+      <div class="eyebrow">node_04 / skills</div>
+      <h2>Stack</h2>
+    </div>
+    <div class="skill-cols">
+      <div class="skill-group">
+        <h3>Languages &amp; Data</h3>
+        <div class="skill-tags">
+          <span>Python</span><span>SQL</span><span>JavaScript</span><span>Pandas</span><span>NumPy</span><span>PostgreSQL</span>
+        </div>
+      </div>
+      <div class="skill-group">
+        <h3>ML &amp; AI</h3>
+        <div class="skill-tags">
+          <span>scikit-learn</span><span>TensorFlow</span><span>XGBoost</span><span>ARIMA / Prophet</span><span>Isolation Forest</span><span>LangChain</span><span>RAG</span><span>YOLOv8</span><span>Time-Series Forecasting</span><span>Anomaly Detection</span><span>Feature Engineering</span><span>Model Evaluation</span>
+        </div>
+      </div>
+      <div class="skill-group">
+        <h3>Cloud &amp; Infra</h3>
+        <div class="skill-tags">
+          <span>AWS</span><span>Azure</span><span>Oracle Fusion / OCI</span><span>OAuth 2.0</span><span>Docker</span><span>Git</span>
+        </div>
+      </div>
+      <div class="skill-group">
+        <h3>Software Engineering</h3>
+        <div class="skill-tags">
+          <span>Flask</span><span>FastAPI</span><span>React</span><span>Vite</span><span>REST API Design</span><span>ETL Pipelines</span><span>CI/CD</span><span>Agile / Scrum</span><span>Unit Testing</span><span>System Design</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="contact">
+    <div class="contact-box">
+      <h2>Let's build the next pipeline.</h2>
+      <p>Open to ML engineering, software engineering, and data engineering roles.</p>
+      <div class="contact-links">
+        <a href="mailto:devarsh@example.com">email</a>
+        <a href="https://linkedin.com/in/devarsh-kunala" target="_blank" rel="noopener">linkedin</a>
+        <a href="https://github.com/Devarsh104520" target="_blank" rel="noopener">github</a>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>build status: passing · last deploy 2026</footer>
+
+<script>
+  // Signature element: animated pipeline rail tracking scroll progress + node activation
+  (function(){
+    var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var rail = document.getElementById('rail');
+    var fill = document.getElementById('railFill');
+    var pulse = document.getElementById('railPulse');
+    var sections = Array.from(document.querySelectorAll('section'));
+
+    function layoutNodes(){
+      // remove old nodes
+      rail.querySelectorAll('.rail-node').forEach(function(n){ n.remove(); });
+      sections.forEach(function(sec){
+        var rect = sec.getBoundingClientRect();
+        var docTop = rect.top + window.scrollY;
+        var node = document.createElement('div');
+        node.className = 'rail-node';
+        node.style.top = docTop + 'px';
+        node.dataset.id = sec.id;
+        rail.appendChild(node);
+      });
+    }
+
+    function update(){
+      var scrollTop = window.scrollY;
+      var docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      var pct = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+      fill.style.height = pct + '%';
+      pulse.style.top = pct + '%';
+
+      var nodes = rail.querySelectorAll('.rail-node');
+      var mid = scrollTop + window.innerHeight * 0.4;
+      var activeSec = null;
+      sections.forEach(function(sec){
+        var rect = sec.getBoundingClientRect();
+        var top = rect.top + scrollTop;
+        var bottom = top + rect.height;
+        if (mid >= top && mid <= bottom) activeSec = sec.id;
+      });
+      nodes.forEach(function(n){
+        n.classList.toggle('active', n.dataset.id === activeSec);
+      });
+    }
+
+    window.addEventListener('load', function(){ layoutNodes(); update(); });
+    window.addEventListener('resize', function(){ layoutNodes(); update(); });
+    window.addEventListener('scroll', update, { passive:true });
+  })();
+</script>
+
+</body>
+</html>
